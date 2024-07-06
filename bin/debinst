@@ -1,0 +1,8 @@
+#!/bin/bash -e
+### debinst debian package installation helper
+quit()(echo "$1"; read -rn 1; return 1)
+test -f "$1" || quit '找不到文件,按任意键退出...'
+echo '软件包信息:'
+dpkg-deb -I "$1" control || quit '软件包损坏,按任意键退出...'
+echo '要安装, 请输入密码'
+sudo apt install "$1"
