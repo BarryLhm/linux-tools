@@ -1,0 +1,3 @@
+#!/bin/bash -e
+### debinst debian package installation helper (GUI)
+x-terminal-emulator -e debinst "$1"
