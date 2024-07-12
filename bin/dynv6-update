@@ -1,0 +1,14 @@
+#!/bin/bash
+set -eu
+
+tokenfile='/usr/local/dynv6-token'
+IFS=' '
+read -r < "$tokenfile" zone interval token none
+
+while true; do
+    ipv4="$(curl --connect-timeout 3 -m 3 ifconfig.me)"
+    ipv6=6to4
+    ipv6prefix=6to4
+    curl --connect-timeout 3 -m 3 'https://dynv6.com/api/update?zone='"$zone"'&token='"$token"'&ipv4='"$ipv4"'&ipv6='"$ipv6"'&ipv6prefix='"$ipv6prefix"
+    sleep "$interval"
+done
