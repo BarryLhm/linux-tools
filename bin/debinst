@@ -1,8 +1,19 @@
-#!/bin/bash -e
+#!/bin/bash -eu
 ### debinst debian package installation helper
-quit()(echo "$1"; read -rn 1; return 1)
+quit()(echo "$1"; read -rn 1; exit 1)
 test -f "$1" || quit '找不到文件,按任意键退出...'
 echo '软件包信息:'
-dpkg-deb -I "$1" control || quit '软件包损坏,按任意键退出...'
+dpkg-deb -I "$1" control || 
 echo '要安装, 请输入密码'
-sudo apt install "$1"
+pkexec apt install "$1" || retval="$?"
+case "$retval" in
+    0|126)
+        exit 0
+        ;;
+    127)
+        quit '密码错误,按任意键退出...'
+        ;;
+    *)
+        quit '安装失败('"$retval"'),按任意键退出...'
+        ;;
+esac
